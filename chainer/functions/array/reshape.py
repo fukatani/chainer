@@ -41,10 +41,13 @@ class Reshape(function.Function):
                 type_check.prod(x_type.shape) % size_var == 0)
 
     def forward(self, x):
+        self.retain_inputs(())
+        self.retain_outputs((0,))
+        self._in_shape = x[0].shape
         return x[0].reshape(self.shape),
 
     def backward(self, x, gy):
-        return gy[0].reshape(x[0].shape),
+        return gy[0].reshape(self._in_shape),
 
 
 def reshape(x, shape):
